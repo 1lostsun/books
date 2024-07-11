@@ -14,12 +14,18 @@ const model_1 = require("../models/model");
 class AppController {
     validateBook(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield model_1.model.getInfo(req, res, next);
+            return true;
+        });
+    }
+    bookInfo(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = this.validateBook;
             if (!result) {
-                return res.status(401).send(`book doesn't exist`);
+                return res.status(404).send(`book doesn't exist`);
             }
             else {
-                return res.json(result);
+                const [book] = yield model_1.model.getInfo(req, res, next);
+                return res.json(book);
             }
         });
     }
@@ -28,4 +34,5 @@ class AppController {
     }
 }
 exports.appController = new AppController();
+console.log(exports.appController.bookInfo());
 //# sourceMappingURL=app.controller.js.map

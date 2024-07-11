@@ -15,13 +15,19 @@ class Model {
     getInfo(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const book = yield db_1.db.query(`SELECT * FROM books where id = $1`, [id]);
-            return book[0];
+            const booksId = id.split(':');
+            const book = yield db_1.db.query(`SELECT * FROM books where id = $1`, [booksId[1]]);
+            return book;
+        });
+    }
+    getAllBooks(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const books = yield db_1.db.query(`SELECT * FROM books`);
+            res.send(books);
         });
     }
     create(_a, res_1, next_1) {
         return __awaiter(this, arguments, void 0, function* ({ body }, res, next) {
-            console.log(body);
             const { title, genre, publicationDate, author } = body;
             const newBook = yield db_1.db.query(`INSERT INTO books (title, genre, publicationDate, author) values ($1, $2, $3, $4) RETURNING *`, [title, genre, publicationDate, author]);
             return res.json(newBook[0]);
@@ -39,7 +45,7 @@ class Model {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.body;
             const delBook = yield db_1.db.query(`DELETE FROM books where id = $1`, [id]);
-            res.status(200).send(`book was deleted`);
+            res.send(`book was deleted`);
             console.log(`book was deleted`);
         });
     }

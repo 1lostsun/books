@@ -32,9 +32,4 @@ class App {
     }
 }
 exports.App = App;
-function bootstrap() {
-    const myApp = new App();
-    myApp.useRoutes();
-}
-bootstrap();
 //# sourceMappingURL=app.js.map
