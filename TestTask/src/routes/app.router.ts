@@ -2,10 +2,9 @@ import { Router } from 'express';
 import { model } from '../models/model';
 import { appController } from '../controllers/app.controller';
 export const router = Router();
-const validateBook = appController.bookInfo;
 
-router.get('/books/:id', validateBook);
+router.get('/books/:id', appController.bookInfo);
 router.get('/books', model.getAllBooks);
-router.post('/books', model.create);
-router.put('/books/:id', model.updateInfo);
-router.delete('/books/:id', model.delete);
+router.post('/books', appController.createBook);
+router.put('/books/:id', appController.updateBook);
+router.delete('/books/:id', appController.deleteBook);
