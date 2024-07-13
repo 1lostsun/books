@@ -13,44 +13,45 @@ class AppController implements IAppController {
 		this.deleteBook = this.deleteBook.bind(this);
 	}
 
-	async validateBooks(req: Request, res: Response, next: NextFunction): Promise<any> {
+	async validateBooks(req: Request, res: Response, next: NextFunction): Promise<boolean> {
 		const { title, genre, author, publicationDate } = req.body;
-		const [Result] = await db.query(
+		const [result] = await db.query(
 			`SELECT EXISTS (SELECT FROM books where title = $1 AND genre = $2 AND publicationDate = $3 AND author = $4)`,
 			[title, genre, publicationDate, author],
 		);
-		return Result.exists;
+		console.log(result);
+		return result.exists;
 	}
 
-	async validateBookID(req: Request, res: Response, next: NextFunction): Promise<any> {
+	async validateBookID(req: Request, res: Response, next: NextFunction): Promise<boolean> {
 		const { id } = req.params;
 		const booksId = id.split(':');
-		const [Result] = await db.query(`SELECT EXISTS (SELECT FROM books where id = $1)`, [
+		const [result] = await db.query(`SELECT EXISTS (SELECT FROM books where id = $1)`, [
 			booksId[1],
 		]);
-		return Result.exists;
+		return result.exists;
 	}
-	async bookInfo(req: Request, res: Response, next: NextFunction): Promise<any> {
+	async bookInfo(req: Request, res: Response, next: NextFunction): Promise<Response> {
 		const result = this.validateBookID(req, res, next);
 		if (!result) {
 			return res.status(404).send(`book doesn't exist`);
 		} else {
-			const [book] = await model.getInfo(req, res, next);
+			const book: object = await model.getInfo(req, res, next);
 			return res.json(book);
 		}
 	}
 
-	async createBook(req: Request, res: Response, next: NextFunction): Promise<any> {
+	async createBook(req: Request, res: Response, next: NextFunction): Promise<Response> {
 		const result = await this.validateBooks(req, res, next);
 		if (result) {
 			return res.status(400).send(`the book already exists`);
 		} else {
-			const [book] = await model.create(req, res, next);
+			const book = await model.create(req, res, next);
 			return res.json(book);
 		}
 	}
 
-	async updateBook(req: Request, res: Response, next: NextFunction): Promise<any> {
+	async updateBook(req: Request, res: Response, next: NextFunction): Promise<Response> {
 		const result = await this.validateBookID(req, res, next);
 		if (!result) {
 			return res.status(404).send(`book doesn't exist`);
@@ -60,13 +61,12 @@ class AppController implements IAppController {
 		}
 	}
 
-	async deleteBook(req: Request, res: Response, next: NextFunction): Promise<any> {
+	async deleteBook(req: Request, res: Response, next: NextFunction): Promise<Response> {
 		const result = await this.validateBookID(req, res, next);
 		if (!result) {
 			return res.status(404).send(`book doesn't exist`);
 		} else {
 			const book = await model.delete(req, res, next);
-			console.log(123);
 			return res.json(book);
 		}
 	}
