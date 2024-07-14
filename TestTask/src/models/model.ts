@@ -26,8 +26,13 @@ class Model implements IModel {
 
 	async updateInfo(req: Request, res: Response, next: NextFunction): Promise<object> {
 		const { id, title, genre, publicationDate, author } = req.body;
-		const [updatedBook]: IBook = await db.query(
-			`UPDATE books SET title = $2, genre = $3, publicationDate = $4, author = $5 where id = $1`,
+		const updatedBook = await db.query(
+			`UPDATE books 
+			SET title = $2, 
+			genre = $3, 
+			publicationDate = $4, 
+			author = $5 
+			where id = $1`,
 			[id, title, genre, publicationDate, author],
 		);
 		return updatedBook;

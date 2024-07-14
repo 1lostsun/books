@@ -50,13 +50,13 @@ class AppController implements IAppController {
 		}
 	}
 
-	async updateBook(req: Request, res: Response, next: NextFunction): Promise<Response> {
+	async updateBook(req: Request, res: Response, next: NextFunction): Promise<void | Response> {
 		const result = await this.validateBookID(req, res, next);
 		if (!result) {
 			return res.status(404).send(`book doesn't exist`);
 		} else {
 			const book = await model.updateInfo(req, res, next);
-			return res.json(book);
+			this.bookInfo(req, res, next);
 		}
 	}
 
