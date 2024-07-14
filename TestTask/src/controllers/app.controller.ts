@@ -19,7 +19,6 @@ class AppController implements IAppController {
 			`SELECT EXISTS (SELECT FROM books where title = $1 AND genre = $2 AND publicationDate = $3 AND author = $4)`,
 			[title, genre, publicationDate, author],
 		);
-		console.log(result);
 		return result.exists;
 	}
 
