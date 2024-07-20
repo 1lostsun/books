@@ -13,7 +13,7 @@ export interface IAppController {
 		next: NextFunction,
 		func: Function,
 	) => Promise<Response>;
-	bookInfo: (req: Request, res: Response, next: NextFunction) => Promise<Response | void>;
+	bookInfo: (req: Request, res: Response, next: NextFunction) => Promise<void | Response>;
 	createBook: (req: Request, res: Response, next: NextFunction) => Promise<void | Response>;
 	updateBook: (req: Request, res: Response, next: NextFunction) => Promise<void | Response>;
 	deleteBook: (req: Request, res: Response, next: NextFunction) => Promise<void | Response>;
