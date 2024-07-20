@@ -27,7 +27,7 @@ class AppController implements IAppController {
 		if (result.exists) {
 			return res.status(400).send(`the book already exists`);
 		} else {
-			const book = await model.create(req, res, next);
+			const book = await func(req, res, next);
 			return res.json(book);
 		}
 	}
